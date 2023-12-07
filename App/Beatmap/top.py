@@ -3,7 +3,7 @@ import discord
 import User.profile as prof
 import Beatmap.plays as pl
 
-async def printRecent(channel,username,key,api,msg):
+async def printTop(channel,username,recent,page,key,api,msg):
     if username[0] == None or username[0].startswith("<@"):
         if username[0] != None:
             username.append(username[0][2:-1])
@@ -17,10 +17,17 @@ async def printRecent(channel,username,key,api,msg):
             await channel.send(embed=message)
             return None
         elif username == "Err":
-            await db.err(channel)
+            message = discord.Embed(
+                title = "Uh oh, error inesperado",
+                description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
+                color = 0x000000
+            )
+            await channel.send(embed=message)
             return None
     else:
         username = " ".join(username)
+    offset = (page-1)*5
+    limit = 5
     profile = prof.get(username,key,api)
     if "error" in profile.keys():
         message = discord.Embed(
@@ -30,21 +37,12 @@ async def printRecent(channel,username,key,api,msg):
         )
         await channel.send(embed=message)
         return None
-    play = db.getRecent(profile['id'],key,api)
-    if not isinstance(play,list):
-        message = discord.Embed(
-            title = "No hay plays :pensive:",
-            description = "El usuario no tiene plays recientes",
-            color = 0x000000
-        )
-        await channel.send(embed=message)
-        return None
-    play = play[0]
-    mapdata = db.getMapData(play['beatmap']['id'],key,api)
-    play['maximum'] = mapdata['max_combo']
-    e = db.savemap(channel,msg,play['beatmap']['id'])
-    if e == "Err":
-        await db.err(channel)
-        return None
-    name = f"**Recent CTB play for {play['user']['username']}:**"
-    await pl.printPlay(name,play,channel)
+    if recent:
+        top = db.getTopRecent(profile['id'],key,api,offset,limit)
+    else:
+        top = db.getTop(profile['id'],key,api,offset,limit)
+    name = f"**Best CTB plays for {profile['username']}:**"
+    url = f"https://osu.ppy.sh/users/{profile['id']}"
+    thumbnail = profile['avatar_url']
+    titleTotal = f"Top Catch the Beat! Plays for {profile['username']}"
+    await pl.printTop(name,url,thumbnail,titleTotal,top,channel)

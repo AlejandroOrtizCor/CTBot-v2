@@ -6,6 +6,7 @@ import Other_Functions.prefix as prefix
 import User.profile as profile
 import Beatmap.recent as recent
 import Beatmap.best as best
+import Beatmap.top as top
 
 # Reading config file to get the tokens
 curPath = os.path.dirname(__file__)
@@ -150,6 +151,26 @@ class Client(discord.Client):
                                 command.append(None)
                                 command.append(user.id)
                     await best.printBest(message.channel,command[1:],map,k,api,message)
+                case "top":
+                    recent = False
+                    page = 1
+                    if len(command)==1:
+                        command.append(None)
+                        command.append(user.id)
+                    else:
+                        for i in command:
+                            if i=="-r":
+                                recent = True
+                            elif i.startswith("-") and i[1:].isdigit():
+                                page = int(i[1:])
+                        if recent:
+                            command = [x for x in command if x!="-r"]
+                        if page!=1:
+                            command = [x for x in command if not x.startswith("-") or not x[1:].isdigit()]
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                    await top.printTop(message.channel,command[1:],recent,page,k,api,message)
 
 # Config intents
 intents = discord.Intents.default()

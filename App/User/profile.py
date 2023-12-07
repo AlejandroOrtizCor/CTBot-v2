@@ -46,7 +46,7 @@ async def printProfile(channel,username,key,api,plus):
             message = discord.Embed(
                 title = "Linkea un usuario a tu cuenta de discord",
                 description = "Para linkear un usuario escribe el comando `??setprofile username` y listo :D",
-                color = 0x0099FF
+                color = 0x000000
             )
             await channel.send(embed=message)
             return None
@@ -54,7 +54,7 @@ async def printProfile(channel,username,key,api,plus):
             message = discord.Embed(
                 title = "Uh oh, error inesperado",
                 description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
-                color = 0x0099FF
+                color = 0x000000
             )
             await channel.send(embed=message)
             return None
@@ -65,7 +65,7 @@ async def printProfile(channel,username,key,api,plus):
         message = discord.Embed(
             title = "Usuario no encontrado",
             description = "El usuario no pudo ser encontrado, revisa el nombre :3",
-            color = 0x0099FF
+            color = 0x000000
         )
         await channel.send(embed=message)
         return None
@@ -93,7 +93,7 @@ async def printProfile(channel,username,key,api,plus):
         title = title,
         url = url,
         description = data,
-        color = 0x0099FF
+        color = 0x000000
     )
     message.set_thumbnail(url=thumbnail)
     await channel.send(embed=message)
@@ -104,7 +104,7 @@ async def newprofile(channel,username,user):
         message = discord.Embed(
             title = "Agrega un perfil para linkear",
             description = "Si no agregas un perfil para linkear a tu cuenta de osu no podras hacer uso de todas las funciones de CTBot :pensive:",
-            color = 0x0099FF
+            color = 0x000000
         )
         await channel.send(embed=message)
         return None
@@ -112,7 +112,7 @@ async def newprofile(channel,username,user):
         message = discord.Embed(
             title = "Uh oh, error inesperado",
             description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
-            color = 0x0099FF
+            color = 0x000000
         )
         await channel.send(embed=message)
         return None
@@ -124,7 +124,7 @@ async def newprofile(channel,username,user):
     message = discord.Embed(
         title = title,
         description = data,
-        color = 0x0099FF
+        color = 0x000000
     )
     await channel.send(embed=message)
 

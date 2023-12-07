@@ -40,6 +40,34 @@ def getRecent(username,key,api):
 
     return response
 
+def getTop(username,key,api,offset,limit):
+    url = f"{api}users/{username}/scores/best"
+    k = f"Bearer {key}"
+    params = {
+        "include_fails":"1",
+        "mode":"fruits",
+        "limit":limit,
+        "offset":offset
+    }
+    res = requests.get(url,headers={"Authorization":k},params=params)
+    response = json.loads(res.text)
+
+    return response
+
+def getTopRecent(username,key,api,offset,limit):
+    url = f"{api}users/{username}/scores/recent"
+    k = f"Bearer {key}"
+    params = {
+        "include_fails":"1",
+        "mode":"fruits",
+        "limit":limit,
+        "offset":offset
+    }
+    res = requests.get(url,headers={"Authorization":k},params=params)
+    response = json.loads(res.text)
+
+    return response
+
 # DB funcs
 
 def getMap(channel,message):
@@ -106,7 +134,7 @@ async def err(channel):
     message = discord.Embed(
         title = "Uh oh, error inesperado",
         description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
-        color = 0x0099FF
+        color = 0x000000
     )
     await channel.send(embed=message)
 

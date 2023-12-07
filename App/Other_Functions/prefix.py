@@ -17,7 +17,7 @@ async def printPrefix(channel):
     message = discord.Embed(
         title = "Prefijo CTBot",
         description = data,
-        color = 0x0099FF
+        color = 0x000000
     )
     await channel.send(embed=message)
 
@@ -38,7 +38,7 @@ async def newPrefix(channel,newPrefix):
     message = discord.Embed(
         title = "Prefijo CTBot",
         description = data,
-        color = 0x0099FF
+        color = 0x000000
     )
     await channel.send(embed=message)
     return newPrefix

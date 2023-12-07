@@ -12,7 +12,7 @@ async def printBest(channel,username,map,key,api,msg):
             message = discord.Embed(
                 title = "Linkea un usuario a tu cuenta de discord",
                 description = "Para linkear un usuario escribe el comando `??setprofile username` y listo :D",
-                color = 0x0099FF
+                color = 0x000000
             )
             await channel.send(embed=message)
             return None
@@ -20,7 +20,7 @@ async def printBest(channel,username,map,key,api,msg):
             message = discord.Embed(
                 title = "Uh oh, error inesperado",
                 description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
-                color = 0x0099FF
+                color = 0x000000
             )
             await channel.send(embed=message)
             return None
@@ -35,7 +35,7 @@ async def printBest(channel,username,map,key,api,msg):
             message = discord.Embed(
                 title = "Error",
                 description = "No hay un mapa anteriormente mencionado en este server, menciona uno usando un `??rs` antes o un `??c mapa` o `??c usario mapa`",
-                color = 0x0099FF
+                color = 0x000000
             )
             await channel.send(embed=message)
             return None
@@ -49,7 +49,7 @@ async def printBest(channel,username,map,key,api,msg):
         message = discord.Embed(
             title = "Mapa no encontrado",
             description = "El mapa no pudo ser encontrado, verifica que el mapa sea de ctb o convert, y revisa el link o id :3",
-            color = 0x0099FF
+            color = 0x000000
         )
         await channel.send(embed=message)
         return None
@@ -58,7 +58,7 @@ async def printBest(channel,username,map,key,api,msg):
         message = discord.Embed(
             title = "Usuario no encontrado",
             description = "El usuario no pudo ser encontrado, revisa el nombre :3",
-            color = 0x0099FF
+            color = 0x000000
         )
         await channel.send(embed=message)
         return None
@@ -67,7 +67,7 @@ async def printBest(channel,username,map,key,api,msg):
         message = discord.Embed(
             title = "No hay plays :pensive:",
             description = "El usuario no tiene plays en este mapa",
-            color = 0x0099FF
+            color = 0x000000
         )
         await channel.send(embed=message)
         return None

@@ -31,7 +31,7 @@ async def printPlay(name,play,channel):
     else:
         pp = f"**{float(play['pp']):.2f} PP**"
     score = f"{play['score']:,}"
-    combo = f"x{play['max_combo']}/{int(play['statistics']['count_100'])+int(play['statistics']['count_300'])+int(play['statistics']['count_miss'])}"
+    combo = f"x{play['max_combo']}/{play['maximum']}"
     stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
     thumbnail = f"https://b.ppy.sh/thumb/{play['beatmap']['beatmapset_id']}l.jpg"
     data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}"

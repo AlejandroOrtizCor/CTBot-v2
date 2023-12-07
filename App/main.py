@@ -103,10 +103,53 @@ class Client(discord.Client):
                         command.append(user.id)
                     await recent.printRecent(message.channel,command[1:],k,api,message)
                 case "c":
+                    map=None
                     if len(command)==1:
                         command.append(None)
                         command.append(user.id)
-                    await best.printBest(message.channel,command[1:],k,api,message)
+                    else:
+                        for i in command:
+                            if i.startswith("m:"):
+                                map=i[2:]
+                                command[command.index(i)]=command[command.index(i)][2:]
+                        if map!=None:
+                            command = [x for x in command if x!=map]
+                            if len(command)==1:
+                                command.append(None)
+                                command.append(user.id)
+                    await best.printBest(message.channel,command[1:],map,k,api,message)
+                case "sc":
+                    map=None
+                    if len(command)==1:
+                        command.append(None)
+                        command.append(user.id)
+                    else:
+                        for i in command:
+                            if i.startswith("m:"):
+                                map=i[2:]
+                                command[command.index(i)]=command[command.index(i)][2:]
+                        if map!=None:
+                            command = [x for x in command if x!=map]
+                            if len(command)==1:
+                                command.append(None)
+                                command.append(user.id)
+                    await best.printBest(message.channel,command[1:],map,k,api,message)
+                case "score":
+                    map=None
+                    if len(command)==1:
+                        command.append(None)
+                        command.append(user.id)
+                    else:
+                        for i in command:
+                            if i.startswith("m:"):
+                                map=i[2:]
+                                command[command.index(i)]=command[command.index(i)][2:]
+                        if map!=None:
+                            command = [x for x in command if x!=map]
+                            if len(command)==1:
+                                command.append(None)
+                                command.append(user.id)
+                    await best.printBest(message.channel,command[1:],map,k,api,message)
 
 # Config intents
 intents = discord.Intents.default()

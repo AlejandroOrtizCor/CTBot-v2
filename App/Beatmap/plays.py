@@ -1,4 +1,6 @@
 import discord
+from datetime import datetime
+import time
 
 async def printPlay(name,play,channel):
     if len(play['mods'])==0:
@@ -34,7 +36,11 @@ async def printPlay(name,play,channel):
     combo = f"x{play['max_combo']}/{play['maximum']}"
     stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
     thumbnail = f"https://b.ppy.sh/thumb/{play['beatmap']['beatmapset_id']}l.jpg"
-    data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}"
+    dateFormat = "%Y-%m-%dT%H:%M:%SZ"
+    d = datetime.strptime(play['created_at'],dateFormat)
+    d = int(time.mktime(d.timetuple()))
+    date = f"<t:{d}:F>"
+    data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}\n{date}"
     message = discord.Embed(
         title = title,
         url = url,
@@ -53,7 +59,7 @@ async def printTop(name,urlTotal,thumbnail,titleTotal,top,channel):
         else:
             mods = "".join(play['mods'])
         url = play['beatmap']['url']
-        title = f"[{play['beatmapset']['title']} [{play['beatmap']['version']}] + {mods} [{play['beatmap']['difficulty_rating']}★]]({url})"
+        title = f"**{play['r']})** [{play['beatmapset']['title']} [{play['beatmap']['version']}] + {mods} [{play['beatmap']['difficulty_rating']}★]]({url})"
         if play['rank'] == "XH":
             rank = "<:rankingXH:1028374879973683250>"
         elif play['rank'] == "X":
@@ -80,7 +86,11 @@ async def printTop(name,urlTotal,thumbnail,titleTotal,top,channel):
         score = f"{play['score']:,}"
         combo = f"x{play['max_combo']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}"
         stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
-        data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}"
+        dateFormat = "%Y-%m-%dT%H:%M:%SZ"
+        d = datetime.strptime(play['created_at'],dateFormat)
+        d = int(time.mktime(d.timetuple()))
+        date = f"<t:{d}:F>"
+        data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}\n{date}"
         titles.append(title)
         dataTotal.append(data)
     final = []

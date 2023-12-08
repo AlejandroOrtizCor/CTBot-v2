@@ -2,6 +2,7 @@ import DB.dbFuncs as db
 import discord
 import User.profile as prof
 import Beatmap.plays as pl
+from datetime import datetime
 
 async def printTop(channel,username,recent,page,key,api,msg):
     if username[0] == None or username[0].startswith("<@"):
@@ -26,8 +27,6 @@ async def printTop(channel,username,recent,page,key,api,msg):
             return None
     else:
         username = " ".join(username)
-    offset = (page-1)*5
-    limit = 5
     profile = prof.get(username,key,api)
     if "error" in profile.keys():
         message = discord.Embed(
@@ -38,9 +37,22 @@ async def printTop(channel,username,recent,page,key,api,msg):
         await channel.send(embed=message)
         return None
     if recent:
-        top = db.getTopRecent(profile['id'],key,api,offset,limit)
-    else:
+        offset = 0
+        limit = 100
         top = db.getTop(profile['id'],key,api,offset,limit)
+        for p in range(len(top)):
+            top[p]['r'] = p+1
+        dateFormat = "%Y-%m-%dT%H:%M:%SZ"
+        top.sort(key=lambda p: datetime.strptime(p['created_at'],dateFormat),reverse=True)
+        offset = (page-1)*5
+        top = top[offset:offset+5]
+    else:
+        offset = (page-1)*5
+        limit = 5
+        top = db.getTop(profile['id'],key,api,offset,limit)
+        for p in range(len(top)):
+            offset+=1
+            top[p]['r'] = offset
     name = f"**Best CTB plays for {profile['username']}:**"
     url = f"https://osu.ppy.sh/users/{profile['id']}"
     thumbnail = profile['avatar_url']

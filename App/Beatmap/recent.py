@@ -1,6 +1,5 @@
 import DB.dbFuncs as db
 import discord
-import User.profile as prof
 import Beatmap.plays as pl
 
 async def printRecent(channel,username,key,api,msg):
@@ -21,7 +20,7 @@ async def printRecent(channel,username,key,api,msg):
             return None
     else:
         username = " ".join(username)
-    profile = prof.get(username,key,api)
+    profile = db.getProfile(username,key,api)
     if "error" in profile.keys():
         message = discord.Embed(
             title = "Usuario no encontrado",

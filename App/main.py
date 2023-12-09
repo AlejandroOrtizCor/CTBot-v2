@@ -2,11 +2,13 @@ import json
 import os
 import discord
 import requests
+import DB.dbFuncs as db
 import Other_Functions.prefix as prefix
 import User.profile as profile
 import Beatmap.recent as recent
 import Beatmap.best as best
 import Beatmap.top as top
+import Beatmap.track as track
 
 # Reading config file to get the tokens
 curPath = os.path.dirname(__file__)
@@ -37,7 +39,7 @@ k = response['access_token']
 class Client(discord.Client):
     async def on_ready(self):
         global pref
-        pref = prefix.get()
+        pref = db.getPrefix()
         print(f'Logged on as {self.user}!')
 
     async def on_message(self, message):
@@ -171,6 +173,10 @@ class Client(discord.Client):
                             command.append(None)
                             command.append(user.id)
                     await top.printTop(message.channel,command[1:],rec,page,k,api,message)
+                case "track":
+                    if len(command)==1:
+                        command.append(None)
+                    await track.setTrack(message.channel,message.channel.id,command[1:],k,api)
 
 # Config intents
 intents = discord.Intents.default()

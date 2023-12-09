@@ -1,19 +1,12 @@
-import DB.db as db
+import DB.dbFuncs as db
 import discord
 
-def get():
-    database.execute("SELECT prefix FROM configs")
-    for p in database:
-        prefix = p[0]
-    
-    return prefix
-
-def set(newPrefix):
-    database.execute(f"UPDATE configs SET prefix = '{newPrefix}'")
-    conn.commit()
-
 async def printPrefix(channel):
-    data = f"Prefijo: `{get()}`\nSi deseas cambiarlo usa el comando `{get()}setprefix prefijo`"
+    prefix = db.getPrefix()
+    if prefix=="Err":
+        await db.err(channel)
+        return None
+    data = f"Prefijo: `{prefix}`\nSi deseas cambiarlo usa el comando `{prefix}setprefix prefijo`"
     message = discord.Embed(
         title = "Prefijo CTBot",
         description = data,
@@ -22,7 +15,10 @@ async def printPrefix(channel):
     await channel.send(embed=message)
 
 async def newPrefix(channel,newPrefix):
-    oldPrefix = get()
+    oldPrefix = db.getPrefix()
+    if oldPrefix=="Err":
+        await db.err(channel)
+        return None
     if newPrefix==None:
         data = f"Agrega un prefijo por favor"
         newPrefix = oldPrefix
@@ -33,7 +29,10 @@ async def newPrefix(channel,newPrefix):
         data = f"Pon un prefijo de 1-2 caracteres por favor"
         newPrefix = oldPrefix
     else:
-        set(newPrefix)
+        n=db.setPrefix(newPrefix)
+        if n=="Err":
+            await db.err(channel)
+            return None
         data = f"Se cambió el prefijo `{oldPrefix}` a `{newPrefix}`"
     message = discord.Embed(
         title = "Prefijo CTBot",
@@ -42,9 +41,3 @@ async def newPrefix(channel,newPrefix):
     )
     await channel.send(embed=message)
     return newPrefix
-
-# Connect database
-conn = db.connect()
-
-# Create cursor for using the database
-database = conn.cursor()

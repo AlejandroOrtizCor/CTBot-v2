@@ -5,6 +5,14 @@ import discord
 
 # API funcs
 
+def getProfile(username,key,api):
+    url = f"{api}users/{username}/fruits"
+    k = f"Bearer {key}"
+    res = requests.get(url,headers={"Authorization":k})
+    response = json.loads(res.text)
+
+    return response
+
 def getMapData(mapid,key,api):
     url = f"{api}beatmaps/{mapid}"
     k = f"Bearer {key}"
@@ -70,6 +78,32 @@ def getTopRecent(username,key,api,offset,limit):
 
 # DB funcs
 
+def getPrefix():
+    try:
+        database.execute("SELECT prefix FROM configs")
+        for p in database:
+            prefix = p[0]
+        return prefix
+    except:
+        return "Err"
+
+def setPrefix(newPrefix):
+    try:
+        database.execute(f"UPDATE configs SET prefix = '{newPrefix}'")
+    except:
+        return "Err"
+
+def setProfile(id, username):
+    try:
+        database.execute(f"SELECT profile FROM users WHERE id = '{id}'")
+        for p in database:
+            database.execute(f"UPDATE users SET profile = '{username}' WHERE id = '{id}'")
+            return False
+        database.execute(f"INSERT INTO users (id,profile) VALUES ('{id}','{username}')")
+        return True
+    except:
+        return "Err"
+
 def getMap(channel,message):
     try:
         maps = ""
@@ -83,7 +117,6 @@ def getMap(channel,message):
             maps = ""
             for m in database:
                 maps = m[0]
-        
         return maps
     except:
         return "Err"
@@ -110,10 +143,8 @@ def savemap(channel,message,mapid):
                 maps.append(m)
             if len(maps)>0:
                 database.execute(f"UPDATE map SET mapa = '{mapid}' WHERE server = '{message.guild.id}'")
-                conn.commit()
             else:
                 database.execute(f"INSERT INTO map (mapa, server) VALUES ('{mapid}','{message.guild.id}')")
-                conn.commit()
         else:
             database.execute(f"SELECT * FROM map WHERE server = '{message.author.id}'")
             maps = []
@@ -121,12 +152,32 @@ def savemap(channel,message,mapid):
                 maps.append(m)
             if len(maps)>0:
                 database.execute(f"UPDATE map SET mapa = '{mapid}' WHERE server = '{message.author.id}'")
-                conn.commit()
             else:
                 database.execute(f"INSERT INTO map (mapa, server) VALUES ('{mapid}','{message.author.id}')")
-                conn.commit()
     except:
         return "Err"
+    
+def savetrack(channel,message,profile,mapurl):
+    try:
+        if str(channel.type) == "private":
+            return "Err2"
+        else:
+            database.execute(f"SELECT channel FROM track WHERE user = '{profile['username']}'")
+            channels = []
+            for i in database:
+                channels = eval(i[0])
+            print(channels,message)
+            if len(channels)>0 and message in channels:
+                return "Err3"
+            elif len(channels)>0 and message not in channels:
+                channels.append(message)
+                database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['username']}'")
+                return 0
+            database.execute(f"INSERT INTO track (channel,user,global_rank,country_rank,pp,last_map) VALUES ('[{message}]','{profile['username']}','{profile['statistics']['global_rank']}','{profile['statistics']['rank']['country']}','{profile['statistics']['pp']}','{mapurl}')")
+    except:
+        return "Err"
+    
+#def gettracks():
 
 # Function to return a message when a db error occurs
 
@@ -140,6 +191,7 @@ async def err(channel):
 
 # Connect database
 conn = db.connect()
+conn.autocommit = True
 
 # Create cursor for using the database
 database = conn.cursor()

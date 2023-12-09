@@ -1,6 +1,5 @@
 import DB.dbFuncs as db
 import discord
-import User.profile as prof
 import Beatmap.plays as pl
 from datetime import datetime
 
@@ -18,16 +17,11 @@ async def printTop(channel,username,recent,page,key,api,msg):
             await channel.send(embed=message)
             return None
         elif username == "Err":
-            message = discord.Embed(
-                title = "Uh oh, error inesperado",
-                description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
-                color = 0x000000
-            )
-            await channel.send(embed=message)
+            await db.err(channel)
             return None
     else:
         username = " ".join(username)
-    profile = prof.get(username,key,api)
+    profile = db.getProfile(username,key,api)
     if "error" in profile.keys():
         message = discord.Embed(
             title = "Usuario no encontrado",

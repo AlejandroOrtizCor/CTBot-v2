@@ -1,47 +1,11 @@
-import DB.db as db
+import DB.dbFuncs as db
 import discord
-import requests
-import json
-
-def get(username,key,api):
-    url = f"{api}users/{username}/fruits"
-    k = f"Bearer {key}"
-    res = requests.get(url,headers={"Authorization":k})
-    response = json.loads(res.text)
-
-    return response
-
-def set(id, username):
-    try:
-        database.execute(f"SELECT profile FROM users WHERE id = '{id}'")
-        for p in database:
-            database.execute(f"UPDATE users SET profile = '{username}' WHERE id = '{id}'")
-            conn.commit()
-            return False
-        database.execute(f"INSERT INTO users (id,profile) VALUES ('{id}','{username}')")
-        conn.commit()
-        return True
-    except:
-        return "Err"
-
-def getfromdb(id):
-    try:
-        database.execute(f"SELECT profile FROM users WHERE id = '{id}'")
-        name = ""
-        for p in database:
-            name = p[0]
-        if name!="":
-            return name
-        else:
-            return None
-    except:
-        return "Err"
     
 async def printProfile(channel,username,key,api,plus):
     if username[0] == None or username[0].startswith("<@"):
         if username[0] != None:
             username.append(username[0][2:-1])
-        username = getfromdb(username[1])
+        username = db.getfromdb(username[1])
         if username == None:
             message = discord.Embed(
                 title = "Linkea un usuario a tu cuenta de discord",
@@ -51,16 +15,11 @@ async def printProfile(channel,username,key,api,plus):
             await channel.send(embed=message)
             return None
         elif username == "Err":
-            message = discord.Embed(
-                title = "Uh oh, error inesperado",
-                description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
-                color = 0x000000
-            )
-            await channel.send(embed=message)
+            await db.err(channel)
             return None
     else:
         username = " ".join(username)
-    profile = get(username,key,api)
+    profile = db.getProfile(username,key,api)
     if "error" in profile.keys():
         message = discord.Embed(
             title = "Usuario no encontrado",
@@ -109,12 +68,7 @@ async def newprofile(channel,username,user):
         await channel.send(embed=message)
         return None
     if new == "Err":
-        message = discord.Embed(
-            title = "Uh oh, error inesperado",
-            description = "Reintenta en unos segundos, si no funciona contacta con Alex ;3",
-            color = 0x000000
-        )
-        await channel.send(embed=message)
+        await db.err(channel)
         return None
     if new:
         title = "Agregado nuevo usuario :D"
@@ -127,9 +81,3 @@ async def newprofile(channel,username,user):
         color = 0x000000
     )
     await channel.send(embed=message)
-
-# Connect database
-conn = db.connect()
-
-# Create cursor for using the database
-database = conn.cursor()

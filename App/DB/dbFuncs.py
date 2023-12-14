@@ -216,7 +216,7 @@ def stoptrack(channel,message,profile):
                 channels = eval(i[0])
             if len(channels)==0 or message not in channels:
                 return "Err3"
-            elif len(channels)>0 and message in channels:
+            elif len(channels)>=0 and message in channels:
                 channels.remove(message)
                 database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['username']}'")
                 return 0

@@ -24,8 +24,20 @@ def getMapData(mapid,key,api):
 
     return response
 
+def getMapSr(mapid,key,api,mods):
+    url = f"{api}beatmaps/{mapid}/attributes"
+    k = f"Bearer {key}"
+    params = {
+        "ruleset":"fruits",
+        "mods":mods
+    }
+    res = requests.post(url,headers={"Authorization":k},params=params)
+    response = json.loads(res.text)
+
+    return response
+
 def getScore(username,mapid,key,api):
-    url = f"{api}beatmaps/{mapid}/scores/users/{username}"
+    url = f"{api}beatmaps/{mapid}/scores/users/{username}/all"
     k = f"Bearer {key}"
     params = {
         "mode":"fruits"
@@ -166,7 +178,6 @@ def savetrack(channel,message,profile,mapurl):
             channels = []
             for i in database:
                 channels = eval(i[0])
-            print(channels,message)
             if len(channels)>0 and message in channels:
                 return "Err3"
             elif len(channels)>0 and message not in channels:
@@ -177,7 +188,40 @@ def savetrack(channel,message,profile,mapurl):
     except:
         return "Err"
     
-#def gettracks():
+def gettracks():
+    try:
+        database.execute(f"SELECT * FROM track")
+        data = []
+        for i in database:
+            data.append(i)
+        return data
+    except:
+        return "Err"
+    
+def updatetrack(profile,mapurl):
+    try:
+        database.execute(f"UPDATE track SET global_rank = '{profile['statistics']['global_rank']}', country_rank = '{profile['statistics']['rank']['country']}', pp = '{profile['statistics']['pp']}', last_map = '{mapurl}' WHERE user = '{profile['username']}'")
+        return 0
+    except:
+        return "Err"
+
+def stoptrack(channel,message,profile):
+    try:
+        if str(channel.type) == "private":
+            return "Err2"
+        else:
+            database.execute(f"SELECT channel FROM track WHERE user = '{profile['username']}'")
+            channels = []
+            for i in database:
+                channels = eval(i[0])
+            if len(channels)==0 or message not in channels:
+                return "Err3"
+            elif len(channels)>0 and message in channels:
+                channels.remove(message)
+                database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['username']}'")
+                return 0
+    except:
+        return "Err"
 
 # Function to return a message when a db error occurs
 

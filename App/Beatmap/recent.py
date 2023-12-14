@@ -1,6 +1,7 @@
 import DB.dbFuncs as db
 import discord
 import Beatmap.plays as pl
+import Other_Functions.parsemods as parsemods
 
 async def printRecent(channel,username,key,api,msg):
     if username[0] == None or username[0].startswith("<@"):
@@ -45,5 +46,8 @@ async def printRecent(channel,username,key,api,msg):
     if e == "Err":
         await db.err(channel)
         return None
+    modsint = parsemods.parse(play['mods'])
+    sr = db.getMapSr(play['beatmap']['id'],key,api,modsint)
+    sr = sr['attributes']['star_rating']
     name = f"**Recent CTB play for {play['user']['username']}:**"
-    await pl.printPlay(name,play,channel)
+    await pl.printPlay(name,play,channel,sr)

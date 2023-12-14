@@ -51,4 +51,4 @@ async def printTop(channel,username,recent,page,key,api,msg):
     url = f"https://osu.ppy.sh/users/{profile['id']}"
     thumbnail = profile['avatar_url']
     titleTotal = f"Top Catch the Beat! Plays for {profile['username']}"
-    await pl.printTop(name,url,thumbnail,titleTotal,top,channel)
+    await pl.printTop(name,url,thumbnail,titleTotal,top,channel,key,api)

@@ -65,12 +65,18 @@ async def printBest(channel,username,map,key,api,msg):
         )
         await channel.send(embed=message)
         return None
-    play = play['score']
-    play['beatmapset'] = mapdata['beatmapset']
-    play['maximum'] = mapdata['max_combo']
-    e = db.savemap(channel,msg,play['beatmap']['id'])
+    play = play['scores']
+    name = f"**Best CTB plays for {profile['username']}:**"
+    url = mapdata['url']
+    thumbnail = f"https://b.ppy.sh/thumb/{mapdata['beatmapset_id']}l.jpg"
+    titleTotal = f"Top Catch the Beat! Plays for {profile['username']} in {mapdata['beatmapset']['title']} [{mapdata['version']}]"
+    for p in range(len(play)):
+        play[p]['beatmap'] = mapdata
+        play[p]['beatmapset'] = mapdata['beatmapset']
+        play[p]['r'] = p+1
+        play[p]['maximum'] = mapdata['max_combo']
+    e = db.savemap(channel,msg,mapid)
     if e == "Err":
         await db.err(channel)
         return None
-    name = f"**Best CTB play for {play['user']['username']}:**"
-    await pl.printPlay(name,play,channel)
+    await pl.printBest(name,url,thumbnail,titleTotal,play,channel,key,api)

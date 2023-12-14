@@ -1,6 +1,5 @@
 import DB.dbFuncs as db
 import discord
-import Beatmap.plays as pl
 from datetime import datetime
 
 async def setTrack(channel,msg,username,key,api):
@@ -56,4 +55,50 @@ async def setTrack(channel,msg,username,key,api):
         color = 0x000000
     )
     await channel.send(embed=message)
-    return None
+
+async def stopTrack(channel,msg,username,key,api):
+    if username[0]==None:
+        message = discord.Embed(
+            title = "Pon un nombre de usuario",
+            description = "Para dejar de trackear un jugador, pon su username despues del comando, asi: `??stop-track username` :3",
+            color = 0x000000
+        )
+        await channel.send(embed=message)
+        return None
+    else:
+        username = " ".join(username)
+    profile = db.getProfile(username,key,api)
+    if "error" in profile.keys():
+        message = discord.Embed(
+            title = "Usuario no encontrado",
+            description = "El usuario no pudo ser encontrado, revisa el nombre :3",
+            color = 0x000000
+        )
+        await channel.send(embed=message)
+        return None
+    stop = db.stoptrack(channel,msg,profile)
+    if stop=="Err":
+        await db.err(channel)
+        return None
+    elif stop=="Err2":
+        message = discord.Embed(
+            title = "No se puede trackear en DM",
+            description = "Debes trackear usuarios en servidores, no en DM",
+            color = 0x000000
+        )
+        await channel.send(embed=message)
+        return None
+    elif stop=="Err3":
+        message = discord.Embed(
+            title = "No se está trackeando",
+            description = "Este usuario no se esta trackeando en este canal",
+            color = 0x000000
+        )
+        await channel.send(embed=message)
+        return None
+    message = discord.Embed(
+        title = "Comando ejecutrado exitosamente :3",
+        description = f"El usuario `{profile['username']}` ya no será trackeado en este canal. Para volver trackearlo pon el comando `??track username` :3",
+        color = 0x000000
+    )
+    await channel.send(embed=message)

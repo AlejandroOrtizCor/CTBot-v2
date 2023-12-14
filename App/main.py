@@ -9,6 +9,10 @@ import Beatmap.recent as recent
 import Beatmap.best as best
 import Beatmap.top as top
 import Beatmap.track as track
+import Beatmap.pp as pp
+
+# Start tracker
+import Beatmap.trackFunc as tf
 
 # Reading config file to get the tokens
 curPath = os.path.dirname(__file__)
@@ -177,6 +181,25 @@ class Client(discord.Client):
                     if len(command)==1:
                         command.append(None)
                     await track.setTrack(message.channel,message.channel.id,command[1:],k,api)
+                case "stop-track":
+                    if len(command)==1:
+                        command.append(None)
+                    await track.stopTrack(message.channel,message.channel.id,command[1:],k,api)
+                case "pp":
+                    map=None
+                    if len(command)==1:
+                        map=None
+                        mods=None
+                    if len(command)==2:
+                        map=command[1]
+                        mods=None
+                    if len(command)==3:
+                        for i in range(len(command)):
+                            if command[i].startswith("m:"):
+                                mods=command[i][2:]
+                            else:
+                                map=command[i]
+                    await pp.getpp(message.channel,map,mods,k,api)
 
 # Config intents
 intents = discord.Intents.default()
@@ -184,6 +207,8 @@ intents.message_content = True
 
 # Establishing a new discord client to initialize the bot
 client = Client(intents=intents)
+
+tf.setClient(client)
 
 # Running bot
 client.run(config["BOT_TOKEN"])

@@ -29,7 +29,7 @@ async def setTrack(channel,msg,username,key,api):
         top[p]['r'] = p+1
     dateFormat = "%Y-%m-%dT%H:%M:%SZ"
     top.sort(key=lambda p: datetime.strptime(p['created_at'],dateFormat),reverse=True)
-    save = db.savetrack(channel,msg,profile,top[0]['beatmap']['url'])
+    save = db.savetrack(channel,msg,profile,top[0]['id'])
     if save=="Err":
         await db.err(channel)
         return None

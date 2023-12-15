@@ -121,7 +121,9 @@ def check():
         top.sort(key=lambda p: datetime.strptime(p['created_at'],dateFormat),reverse=True)
         if str(profile['statistics']['pp'])==track[4]:
             continue
-        update = db.updatetrack(profile,top[0]['beatmap']['url'])
+        if str(top[0]['id'])==track[5]:
+            continue
+        update = db.updatetrack(profile,top[0]['id'])
         if update == "Err":
             print("Error")
             continue

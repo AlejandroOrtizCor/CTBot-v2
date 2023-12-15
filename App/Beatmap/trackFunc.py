@@ -86,7 +86,7 @@ def getMsg(name,play,channel,track,profile):
     combo = f"x{play['max_combo']}/{int(play['statistics']['count_100'])+int(play['statistics']['count_300'])+int(play['statistics']['count_miss'])}"
     stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
     thumbnail = f"https://b.ppy.sh/thumb/{play['beatmap']['beatmapset_id']}l.jpg"
-    changes = f"**Global rank:** #{track[1]} -> #{profile['statistics']['global_rank']}\n**Country rank:** #{track[2]} -> #{profile['statistics']['rank']['country']}"
+    changes = f"**PP:** {float(track[4]):,} PP -> {profile['statistics']['pp']:,} PP\n**Global rank:** #{track[1]} -> #{profile['statistics']['global_rank']}\n**Country rank:** #{track[2]} -> #{profile['statistics']['rank']['country']}"
     dateFormat = "%Y-%m-%dT%H:%M:%SZ"
     d = datetime.strptime(play['created_at'],dateFormat)
     d = int(time.mktime(d.timetuple()))
@@ -119,9 +119,7 @@ def check():
             top[p]['r'] = p+1
         dateFormat = "%Y-%m-%dT%H:%M:%SZ"
         top.sort(key=lambda p: datetime.strptime(p['created_at'],dateFormat),reverse=True)
-        if profile['statistics']['pp']==track[4]:
-            continue
-        if top[0]['beatmap']['url']==track[5]:
+        if str(profile['statistics']['pp'])==track[4]:
             continue
         update = db.updatetrack(profile,top[0]['beatmap']['url'])
         if update == "Err":
@@ -134,4 +132,4 @@ def check():
             msg = getMsg(name,top[0],channel,track,profile)
             asyncio.run_coroutine_threadsafe(printTrack(channel,msg[0],msg[1]),client.loop)
 
-threading.Thread(target=lambda: every(40, check)).start()
+threading.Thread(target=lambda: every(30, check)).start()

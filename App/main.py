@@ -52,154 +52,155 @@ class Client(discord.Client):
         user = message.author
         if content.startswith(pref):
             command = content.lstrip(pref)
-            command = command.split()
-            match command[0]:
-                case "prefix":
-                    await prefix.printPrefix(message.channel)
-                case "setprefix":
-                    if len(command)==1:
-                        command.append(None)
-                    pref = await prefix.newPrefix(message.channel,command[1])
-                case "profile":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await profile.printProfile(message.channel,command[1:],k,api,False)
-                case "p":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await profile.printProfile(message.channel,command[1:],k,api,False)
-                case "ctb":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await profile.printProfile(message.channel,command[1:],k,api,False)
-                case "profile+":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await profile.printProfile(message.channel,command[1:],k,api,True)
-                case "p+":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await profile.printProfile(message.channel,command[1:],k,api,True)
-                case "ctb+":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await profile.printProfile(message.channel,command[1:],k,api,True)
-                case "setprofile":
-                    if len(command)==1:
-                        command.append(None)
-                    await profile.newprofile(message.channel,command[1],user.id)
-                case "r":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await recent.printRecent(message.channel,command[1:],k,api,message)
-                case "rs":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await recent.printRecent(message.channel,command[1:],k,api,message)
-                case "recent":
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    await recent.printRecent(message.channel,command[1:],k,api,message)
-                case "c":
-                    map=None
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    else:
-                        for i in command:
-                            if i.startswith("m:"):
-                                map=i[2:]
-                                command[command.index(i)]=command[command.index(i)][2:]
-                        if map!=None:
-                            command = [x for x in command if x!=map]
-                            if len(command)==1:
-                                command.append(None)
-                                command.append(user.id)
-                    await best.printBest(message.channel,command[1:],map,k,api,message)
-                case "sc":
-                    map=None
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    else:
-                        for i in command:
-                            if i.startswith("m:"):
-                                map=i[2:]
-                                command[command.index(i)]=command[command.index(i)][2:]
-                        if map!=None:
-                            command = [x for x in command if x!=map]
-                            if len(command)==1:
-                                command.append(None)
-                                command.append(user.id)
-                    await best.printBest(message.channel,command[1:],map,k,api,message)
-                case "score":
-                    map=None
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    else:
-                        for i in command:
-                            if i.startswith("m:"):
-                                map=i[2:]
-                                command[command.index(i)]=command[command.index(i)][2:]
-                        if map!=None:
-                            command = [x for x in command if x!=map]
-                            if len(command)==1:
-                                command.append(None)
-                                command.append(user.id)
-                    await best.printBest(message.channel,command[1:],map,k,api,message)
-                case "top":
-                    rec = False
-                    page = 1
-                    if len(command)==1:
-                        command.append(None)
-                        command.append(user.id)
-                    else:
-                        for i in command:
-                            if i=="-r":
-                                rec = True
-                            elif i.startswith("-") and i[1:].isdigit():
-                                page = int(i[1:])
-                        if rec:
-                            command = [x for x in command if x!="-r"]
-                        if page!=1:
-                            command = [x for x in command if not x.startswith("-") or not x[1:].isdigit()]
+            if len(command)>0:
+                command = command.split()
+                match command[0]:
+                    case "prefix":
+                        await prefix.printPrefix(message.channel)
+                    case "setprefix":
+                        if len(command)==1:
+                            command.append(None)
+                        pref = await prefix.newPrefix(message.channel,command[1])
+                    case "profile":
                         if len(command)==1:
                             command.append(None)
                             command.append(user.id)
-                    await top.printTop(message.channel,command[1:],rec,page,k,api,message)
-                case "track":
-                    if len(command)==1:
-                        command.append(None)
-                    await track.setTrack(message.channel,message.channel.id,command[1:],k,api)
-                case "stop-track":
-                    if len(command)==1:
-                        command.append(None)
-                    await track.stopTrack(message.channel,message.channel.id,command[1:],k,api)
-                case "pp":
-                    map=None
-                    if len(command)==1:
+                        await profile.printProfile(message.channel,command[1:],k,api,False)
+                    case "p":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await profile.printProfile(message.channel,command[1:],k,api,False)
+                    case "ctb":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await profile.printProfile(message.channel,command[1:],k,api,False)
+                    case "profile+":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await profile.printProfile(message.channel,command[1:],k,api,True)
+                    case "p+":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await profile.printProfile(message.channel,command[1:],k,api,True)
+                    case "ctb+":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await profile.printProfile(message.channel,command[1:],k,api,True)
+                    case "setprofile":
+                        if len(command)==1:
+                            command.append(None)
+                        await profile.newprofile(message.channel,command[1],user.id)
+                    case "r":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await recent.printRecent(message.channel,command[1:],k,api,message)
+                    case "rs":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await recent.printRecent(message.channel,command[1:],k,api,message)
+                    case "recent":
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        await recent.printRecent(message.channel,command[1:],k,api,message)
+                    case "c":
                         map=None
-                        mods=None
-                    if len(command)==2:
-                        map=command[1]
-                        mods=None
-                    if len(command)==3:
-                        for i in range(len(command)):
-                            if command[i].startswith("m:"):
-                                mods=command[i][2:]
-                            else:
-                                map=command[i]
-                    await pp.getpp(message.channel,map,mods,k,api)
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        else:
+                            for i in command:
+                                if i.startswith("m:"):
+                                    map=i[2:]
+                                    command[command.index(i)]=command[command.index(i)][2:]
+                            if map!=None:
+                                command = [x for x in command if x!=map]
+                                if len(command)==1:
+                                    command.append(None)
+                                    command.append(user.id)
+                        await best.printBest(message.channel,command[1:],map,k,api,message)
+                    case "sc":
+                        map=None
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        else:
+                            for i in command:
+                                if i.startswith("m:"):
+                                    map=i[2:]
+                                    command[command.index(i)]=command[command.index(i)][2:]
+                            if map!=None:
+                                command = [x for x in command if x!=map]
+                                if len(command)==1:
+                                    command.append(None)
+                                    command.append(user.id)
+                        await best.printBest(message.channel,command[1:],map,k,api,message)
+                    case "score":
+                        map=None
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        else:
+                            for i in command:
+                                if i.startswith("m:"):
+                                    map=i[2:]
+                                    command[command.index(i)]=command[command.index(i)][2:]
+                            if map!=None:
+                                command = [x for x in command if x!=map]
+                                if len(command)==1:
+                                    command.append(None)
+                                    command.append(user.id)
+                        await best.printBest(message.channel,command[1:],map,k,api,message)
+                    case "top":
+                        rec = False
+                        page = 1
+                        if len(command)==1:
+                            command.append(None)
+                            command.append(user.id)
+                        else:
+                            for i in command:
+                                if i=="-r":
+                                    rec = True
+                                elif i.startswith("-") and i[1:].isdigit():
+                                    page = int(i[1:])
+                            if rec:
+                                command = [x for x in command if x!="-r"]
+                            if page!=1:
+                                command = [x for x in command if not x.startswith("-") or not x[1:].isdigit()]
+                            if len(command)==1:
+                                command.append(None)
+                                command.append(user.id)
+                        await top.printTop(message.channel,command[1:],rec,page,k,api,message)
+                    case "track":
+                        if len(command)==1:
+                            command.append(None)
+                        await track.setTrack(message.channel,message.channel.id,command[1:],k,api)
+                    case "stop-track":
+                        if len(command)==1:
+                            command.append(None)
+                        await track.stopTrack(message.channel,message.channel.id,command[1:],k,api)
+                    case "pp":
+                        map=None
+                        if len(command)==1:
+                            map=None
+                            mods=None
+                        if len(command)==2:
+                            map=command[1]
+                            mods=None
+                        if len(command)==3:
+                            for i in range(len(command)):
+                                if command[i].startswith("m:"):
+                                    mods=command[i][2:]
+                                else:
+                                    map=command[i]
+                        await pp.getpp(message.channel,map,mods,k,api)
 
 # Config intents
 intents = discord.Intents.default()

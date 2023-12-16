@@ -57,7 +57,8 @@ async def printBest(channel,username,map,key,api,msg):
         await channel.send(embed=message)
         return None
     play = db.getScore(profile['id'],mapid,key,api)
-    if "error" in play.keys():
+    play = play['scores']
+    if len(play)==0:
         message = discord.Embed(
             title = "No hay plays :pensive:",
             description = "El usuario no tiene plays en este mapa",
@@ -65,7 +66,6 @@ async def printBest(channel,username,map,key,api,msg):
         )
         await channel.send(embed=message)
         return None
-    play = play['scores']
     name = f"**Best CTB plays for {profile['username']}:**"
     url = mapdata['url']
     thumbnail = f"https://b.ppy.sh/thumb/{mapdata['beatmapset_id']}l.jpg"

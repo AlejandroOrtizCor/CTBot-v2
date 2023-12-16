@@ -176,11 +176,13 @@ def savetrack(channel,message,profile,mapurl):
         else:
             database.execute(f"SELECT channel FROM track WHERE user = '{profile['username']}'")
             channels = []
+            c = ""
             for i in database:
                 channels = eval(i[0])
+                c = i[0]
             if len(channels)>0 and message in channels:
                 return "Err3"
-            elif len(channels)>=0 and message not in channels:
+            elif len(channels)>=0 and message not in channels and c.startswith("["):
                 channels.append(message)
                 database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['username']}'")
                 return 0

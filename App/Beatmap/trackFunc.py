@@ -18,20 +18,7 @@ configFile.close()
 
 # Vars
 api = "https://osu.ppy.sh/api/v2/"
-url = "https://osu.ppy.sh/oauth/token"
-headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/x-www-form-urlencoded",
-}
-body = {
-    "client_id":config['client_id'],
-    "client_secret":config['client_secret'],
-    "grant_type":"client_credentials",
-    "scope":"public"
-}
-res = requests.post(url,headers=headers,data=body)
-response = json.loads(res.text)
-key = response['access_token']
+key = ""
 
 client = 0
 
@@ -49,7 +36,7 @@ def every(delay, task):
             pass
         next_time += (time.time() - next_time) // delay * delay + delay
 
-def getMsg(name,play,channel,track,profile):
+def getMsg(name,play,track,profile):
     if len(play['mods'])==0:
         mods = "No Mod"
     else:
@@ -134,4 +121,22 @@ def check():
             msg = getMsg(name,top[0],channel,track,profile)
             asyncio.run_coroutine_threadsafe(printTrack(channel,msg[0],msg[1]),client.loop)
 
+def getkey():
+    global key
+    url = "https://osu.ppy.sh/oauth/token"
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+    body = {
+        "client_id":config['client_id'],
+        "client_secret":config['client_secret'],
+        "grant_type":"client_credentials",
+        "scope":"public"
+    }
+    res = requests.post(url,headers=headers,data=body)
+    response = json.loads(res.text)
+    key = response['access_token']
+
+threading.Thread(target=lambda: every(86000, getkey)).start()
 threading.Thread(target=lambda: every(30, check)).start()

@@ -1,5 +1,7 @@
 import json
 import os
+import threading
+import time
 import discord
 import requests
 import DB.dbFuncs as db
@@ -24,20 +26,36 @@ configFile.close()
 # Global variables
 pref = "??"
 api = "https://osu.ppy.sh/api/v2/"
-url = "https://osu.ppy.sh/oauth/token"
-headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/x-www-form-urlencoded",
-}
-body = {
-    "client_id":config['client_id'],
-    "client_secret":config['client_secret'],
-    "grant_type":"client_credentials",
-    "scope":"public"
-}
-res = requests.post(url,headers=headers,data=body)
-response = json.loads(res.text)
-k = response['access_token']
+k = ""
+
+def every(delay, task):
+    next_time = time.time() + delay
+    while True:
+        time.sleep(max(0, next_time - time.time()))
+        try:
+            task()
+        except Exception:
+            pass
+        next_time += (time.time() - next_time) // delay * delay + delay
+
+def getkey():
+    global k
+    url = "https://osu.ppy.sh/oauth/token"
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+    body = {
+        "client_id":config['client_id'],
+        "client_secret":config['client_secret'],
+        "grant_type":"client_credentials",
+        "scope":"public"
+    }
+    res = requests.post(url,headers=headers,data=body)
+    response = json.loads(res.text)
+    k = response['access_token']
+
+threading.Thread(target=lambda: every(86000, getkey)).start()
 
 # Defining client
 class Client(discord.Client):

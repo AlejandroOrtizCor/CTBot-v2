@@ -18,7 +18,20 @@ configFile.close()
 
 # Vars
 api = "https://osu.ppy.sh/api/v2/"
-key = ""
+url = "https://osu.ppy.sh/oauth/token"
+headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/x-www-form-urlencoded",
+}
+body = {
+    "client_id":config['client_id'],
+    "client_secret":config['client_secret'],
+    "grant_type":"client_credentials",
+    "scope":"public"
+}
+res = requests.post(url,headers=headers,data=body)
+response = json.loads(res.text)
+key = response['access_token']
 
 client = 0
 

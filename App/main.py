@@ -26,7 +26,20 @@ configFile.close()
 # Global variables
 pref = "??"
 api = "https://osu.ppy.sh/api/v2/"
-k = ""
+url = "https://osu.ppy.sh/oauth/token"
+headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/x-www-form-urlencoded",
+}
+body = {
+    "client_id":config['client_id'],
+    "client_secret":config['client_secret'],
+    "grant_type":"client_credentials",
+    "scope":"public"
+}
+res = requests.post(url,headers=headers,data=body)
+response = json.loads(res.text)
+k = response['access_token']
 
 def every(delay, task):
     next_time = time.time() + delay

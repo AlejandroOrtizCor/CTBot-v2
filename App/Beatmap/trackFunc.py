@@ -131,7 +131,7 @@ def check():
         chns = eval(track[0])
         for id in chns:
             channel = client.get_channel(id)
-            msg = getMsg(name,top[0],channel,track,profile)
+            msg = getMsg(name,top[0],track,profile)
             asyncio.run_coroutine_threadsafe(printTrack(channel,msg[0],msg[1]),client.loop)
 
 def getkey():
@@ -152,4 +152,4 @@ def getkey():
     key = response['access_token']
 
 threading.Thread(target=lambda: every(86000, getkey)).start()
-threading.Thread(target=lambda: every(30, check)).start()
+threading.Thread(target=lambda: every(5, check)).start()

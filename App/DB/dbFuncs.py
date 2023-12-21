@@ -169,12 +169,12 @@ def savemap(channel,message,mapid):
     except:
         return "Err"
     
-def savetrack(channel,message,profile,mapurl):
+def savetrack(channel,message,profile,mapid):
     try:
         if str(channel.type) == "private":
             return "Err2"
         else:
-            database.execute(f"SELECT channel FROM track WHERE user = '{profile['username']}'")
+            database.execute(f"SELECT channel FROM track WHERE user = '{profile['id']}'")
             channels = []
             c = ""
             for i in database:
@@ -184,9 +184,9 @@ def savetrack(channel,message,profile,mapurl):
                 return "Err3"
             elif len(channels)>=0 and message not in channels and c.startswith("["):
                 channels.append(message)
-                database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['username']}'")
+                database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['id']}'")
                 return 0
-            database.execute(f"INSERT INTO track (channel,user,global_rank,country_rank,pp,last_map) VALUES ('[{message}]','{profile['username']}','{profile['statistics']['global_rank']}','{profile['statistics']['rank']['country']}','{profile['statistics']['pp']}','{mapurl}')")
+            database.execute(f"INSERT INTO track (channel,user,global_rank,country_rank,pp,last_map) VALUES ('[{message}]','{profile['id']}','{profile['statistics']['global_rank']}','{profile['statistics']['rank']['country']}','{profile['statistics']['pp']}','{mapid}')")
     except:
         return "Err"
     
@@ -200,9 +200,9 @@ def gettracks():
     except:
         return "Err"
     
-def updatetrack(profile,mapurl):
+def updatetrack(profile,mapid):
     try:
-        database.execute(f"UPDATE track SET global_rank = '{profile['statistics']['global_rank']}', country_rank = '{profile['statistics']['rank']['country']}', pp = '{profile['statistics']['pp']}', last_map = '{mapurl}' WHERE user = '{profile['username']}'")
+        database.execute(f"UPDATE track SET global_rank = '{profile['statistics']['global_rank']}', country_rank = '{profile['statistics']['rank']['country']}', pp = '{profile['statistics']['pp']}', last_map = '{mapid}' WHERE user = '{profile['id']}'")
         return 0
     except:
         return "Err"
@@ -212,7 +212,7 @@ def stoptrack(channel,message,profile):
         if str(channel.type) == "private":
             return "Err2"
         else:
-            database.execute(f"SELECT channel FROM track WHERE user = '{profile['username']}'")
+            database.execute(f"SELECT channel FROM track WHERE user = '{profile['id']}'")
             channels = []
             for i in database:
                 channels = eval(i[0])
@@ -220,7 +220,7 @@ def stoptrack(channel,message,profile):
                 return "Err3"
             elif len(channels)>0 and message in channels:
                 channels.remove(message)
-                database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['username']}'")
+                database.execute(f"UPDATE track SET channel = '{str(channels)}' WHERE user = '{profile['id']}'")
                 return 0
     except:
         return "Err"

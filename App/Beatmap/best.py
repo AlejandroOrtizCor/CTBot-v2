@@ -66,7 +66,7 @@ async def printBest(channel,username,map,key,api,msg):
         )
         await channel.send(embed=message)
         return None
-    name = f"**Best CTB plays for {profile['username']}:**"
+    name = f"**Best CTB plays for [{profile['username']}](https://osu.ppy.sh/users/{profile['id']}):**"
     url = mapdata['url']
     thumbnail = f"https://b.ppy.sh/thumb/{mapdata['beatmapset_id']}l.jpg"
     titleTotal = f"Top Catch the Beat! Plays for {profile['username']} in {mapdata['beatmapset']['title']} [{mapdata['version']}]"

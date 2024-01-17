@@ -127,7 +127,7 @@ def check():
         if update == "Err":
             print("Error")
             continue
-        name = f"**Recent CTB play for {profile['username']}:**"
+        name = f"**Recent CTB play for [{profile['username']}](https://osu.ppy.sh/users/{profile['id']}):**"
         chns = eval(track[0])
         for id in chns:
             channel = client.get_channel(id)
@@ -152,4 +152,4 @@ def getkey():
     key = response['access_token']
 
 threading.Thread(target=lambda: every(86000, getkey)).start()
-threading.Thread(target=lambda: every(5, check)).start()
+threading.Thread(target=lambda: every(30, check)).start()

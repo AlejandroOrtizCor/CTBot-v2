@@ -57,8 +57,7 @@ async def printProfile(channel,username,key,api,plus):
     message.set_thumbnail(url=thumbnail)
     await channel.send(embed=message)
 
-async def newprofile(channel,username,user):
-    new = set(user,username)
+async def newprofile(channel,username,user,key,api):
     if username==None:
         message = discord.Embed(
             title = "Agrega un perfil para linkear",
@@ -67,6 +66,17 @@ async def newprofile(channel,username,user):
         )
         await channel.send(embed=message)
         return None
+    profile = db.getProfile(username,key,api)
+    if "error" in profile.keys():
+        message = discord.Embed(
+            title = "Usuario no encontrado",
+            description = "El usuario no pudo ser encontrado, revisa el nombre :3",
+            color = 0x000000
+        )
+        await channel.send(embed=message)
+        return None
+    username = profile['id']
+    new = db.setProfile(user,username)
     if new == "Err":
         await db.err(channel)
         return None

@@ -125,7 +125,7 @@ class Client(discord.Client):
                     case "setprofile":
                         if len(command)==1:
                             command.append(None)
-                        await profile.newprofile(message.channel,command[1],user.id)
+                        await profile.newprofile(message.channel,command[1],user.id,k,api)
                     case "r":
                         if len(command)==1:
                             command.append(None)

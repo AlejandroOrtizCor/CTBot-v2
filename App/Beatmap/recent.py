@@ -31,7 +31,7 @@ async def printRecent(channel,username,key,api,msg):
         await channel.send(embed=message)
         return None
     play = db.getRecent(profile['id'],key,api)
-    if not isinstance(play,list):
+    if len(play)==0:
         message = discord.Embed(
             title = "No hay plays :pensive:",
             description = "El usuario no tiene plays recientes",

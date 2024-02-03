@@ -84,7 +84,7 @@ def getMsg(name,play,track,profile):
         pp = f"**{float(play['pp']):.2f} PP**"
     score = f"{play['score']:,}"
     combo = f"x{play['max_combo']}/{int(play['statistics']['count_100'])+int(play['statistics']['count_300'])+int(play['statistics']['count_miss'])}"
-    stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
+    stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]  (Droplets: {play['statistics']['count_katu']})"
     thumbnail = f"https://b.ppy.sh/thumb/{play['beatmap']['beatmapset_id']}l.jpg"
     changes = f"**PP:** {float(track[4]):,} PP -> {profile['statistics']['pp']:,} PP\n**Global rank:** #{track[1]} -> #{profile['statistics']['global_rank']}\n**Country rank:** #{track[2]} -> #{profile['statistics']['rank']['country']}"
     dateFormat = "%Y-%m-%dT%H:%M:%SZ"

@@ -218,13 +218,17 @@ class Client(discord.Client):
                             command.append(None)
                         await track.stopTrack(message.channel,message.channel.id,command[1:],k,api)
                     case "pp":
-                        map=None
                         if len(command)==1:
+                            print(command)
                             map=None
                             mods=None
                         if len(command)==2:
-                            map=command[1]
-                            mods=None
+                            if command[1].startswith("m:"):
+                                map=command[1][2:]
+                                mods=None
+                            else:
+                                map=None
+                                mods=command[1]
                         if len(command)==3:
                             for i in range(len(command)):
                                 if command[i].startswith("m:"):

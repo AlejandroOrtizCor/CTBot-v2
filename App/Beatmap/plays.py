@@ -97,7 +97,7 @@ async def printTop(name,urlTotal,thumbnail,titleTotal,top,channel,key,api):
             pp = f"**{float(play['pp']):.2f} PP**"
         score = f"{play['score']:,}"
         combo = f"x{play['max_combo']}/{int(play['statistics']['count_100'])+int(play['statistics']['count_300'])+int(play['statistics']['count_miss'])}"
-        stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
+        stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}] (Droplets: {play['statistics']['count_katu']})"
         dateFormat = "%Y-%m-%dT%H:%M:%SZ"
         d = datetime.strptime(play['created_at'],dateFormat)
         d = int(time.mktime(d.timetuple()))
@@ -157,7 +157,7 @@ async def printBest(name,urlTotal,thumbnail,titleTotal,top,channel,key,api):
             pp = f"**{float(play['pp']):.2f} PP**"
         score = f"{play['score']:,}"
         combo = f"x{play['max_combo']}/{play['maximum']}"
-        stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
+        stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}] (Droplets: {play['statistics']['count_katu']})"
         dateFormat = "%Y-%m-%dT%H:%M:%SZ"
         d = datetime.strptime(play['created_at'],dateFormat)
         d = int(time.mktime(d.timetuple()))

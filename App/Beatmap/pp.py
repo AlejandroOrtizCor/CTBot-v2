@@ -3,19 +3,26 @@ import discord
 import Other_Functions.pp as pp
 import Other_Functions.parsemods as parsemods
 
-async def getpp(channel,map,mods,key,api):
+async def getpp(channel,map,mods,key,api,msg):
     if map==None:
-        message = discord.Embed(
-            title = "Pon un mapa",
-            description = "Para ver el pp de un mapa, debes poner el mapa, ya sea su link o id",
-            color = 0x000000
-        )
-        await channel.send(embed=message)
-        return None
-    if map.isdigit():
+        mapid = db.getMap(channel,msg)
+        if mapid == "Err":
+            await db.err(channel)
+            return None
+        if mapid == "":
+            message = discord.Embed(
+                title = "Error",
+                description = "No hay un mapa anteriormente mencionado en este server, menciona uno usando un `??rs` antes o un `??c mapa` o `??c usario mapa`",
+                color = 0x000000
+            )
+            await channel.send(embed=message)
+            return None
+    elif map.isdigit():
         mapid = map
-    else:
+    elif "#fruits/" in map:
         mapid = map[map.find("#fruits/")+8:]
+    elif "beatmaps/" in map:
+        mapid = map[map.find("beatmaps/")+9:]
     if mods!=None:
         mods=mods.split(",")
     else:

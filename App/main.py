@@ -231,7 +231,7 @@ class Client(discord.Client):
                                     map=command[i][2:]
                                 else:
                                     mods=command[i]
-                        await pp.getpp(message.channel,map,mods,k,api)
+                        await pp.getpp(message.channel,map,mods,k,api,message)
 
 # Config intents
 intents = discord.Intents.default()

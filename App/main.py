@@ -219,7 +219,6 @@ class Client(discord.Client):
                         await track.stopTrack(message.channel,message.channel.id,command[1:],k,api)
                     case "pp":
                         if len(command)==1:
-                            print(command)
                             map=None
                             mods=None
                         if len(command)==2:

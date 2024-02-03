@@ -228,9 +228,9 @@ class Client(discord.Client):
                         if len(command)==3:
                             for i in range(len(command)):
                                 if command[i].startswith("m:"):
-                                    mods=command[i][2:]
+                                    map=command[i][2:]
                                 else:
-                                    map=command[i]
+                                    mods=command[i]
                         await pp.getpp(message.channel,map,mods,k,api)
 
 # Config intents

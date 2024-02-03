@@ -50,4 +50,4 @@ async def printRecent(channel,username,key,api,msg):
     sr = db.getMapSr(play['beatmap']['id'],key,api,modsint)
     sr = sr['attributes']['star_rating']
     name = f"**Recent CTB play for [{play['user']['username']}](https://osu.ppy.sh/users/{play['user']['id']}):**"
-    await pl.printPlay(name,play,channel,sr)
+    await pl.printPlay(name,play,channel,sr,key,api)

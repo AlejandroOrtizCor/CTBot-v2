@@ -1,10 +1,16 @@
 import discord
 from datetime import datetime
 import time
-import Other_Functions.parsemods as parsemods
+from Other_Functions.parsemods import parse as parsemods
 import DB.dbFuncs as db
+from Other_Functions.pp import calcpp
 
-async def printPlay(name,play,channel,sr):
+async def printPlay(name,play,channel,sr,key,api):
+    mapdata = db.getMapData(play['beatmap']['id'],key,api)
+    modsint = parsemods(play['mods'])
+    sr = db.getMapSr(play['beatmap']['id'],key,api,modsint)
+    total = calcpp(sr['attributes']['star_rating'],sr['attributes']['approach_rate'],mapdata['max_combo'],play['mods'])
+    sr = sr['attributes']['star_rating']
     if len(play['mods'])==0:
         mods = "No Mod"
     else:
@@ -36,13 +42,14 @@ async def printPlay(name,play,channel,sr):
         pp = f"**{float(play['pp']):.2f} PP**"
     score = f"{play['score']:,}"
     combo = f"x{play['max_combo']}/{play['maximum']}"
-    stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}]"
+    stats = f"[{play['statistics']['count_300']}/{play['statistics']['count_100']}/{play['statistics']['count_50']}/{play['statistics']['count_miss']}] (Droplets: {play['statistics']['count_katu']})"
     thumbnail = f"https://b.ppy.sh/thumb/{play['beatmap']['beatmapset_id']}l.jpg"
+    fc = f"({total[0]} PP for 100%)"
     dateFormat = "%Y-%m-%dT%H:%M:%SZ"
     d = datetime.strptime(play['created_at'],dateFormat)
     d = int(time.mktime(d.timetuple()))
-    date = f"<t:{d}:F>"
-    data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}\n{date}"
+    date = f"<t:{d}:D>"
+    data = f"{rank} - {pp} - {acc} - {fc}\n{score} - {combo} - {stats}\n{date}"
     message = discord.Embed(
         title = title,
         url = url,
@@ -61,7 +68,7 @@ async def printTop(name,urlTotal,thumbnail,titleTotal,top,channel,key,api):
         else:
             mods = "".join(play['mods'])
         url = play['beatmap']['url']
-        modsint = parsemods.parse(play['mods'])
+        modsint = parsemods(play['mods'])
         sr = db.getMapSr(play['beatmap']['id'],key,api,modsint)
         sr = sr['attributes']['star_rating']
         title = f"**{play['r']})** [{play['beatmapset']['title']} [{play['beatmap']['version']}] + {mods} [{sr:.2f}★]]({url})"
@@ -94,7 +101,7 @@ async def printTop(name,urlTotal,thumbnail,titleTotal,top,channel,key,api):
         dateFormat = "%Y-%m-%dT%H:%M:%SZ"
         d = datetime.strptime(play['created_at'],dateFormat)
         d = int(time.mktime(d.timetuple()))
-        date = f"<t:{d}:F>"
+        date = f"<t:{d}:D>"
         data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}\n{date}"
         titles.append(title)
         dataTotal.append(data)
@@ -121,7 +128,7 @@ async def printBest(name,urlTotal,thumbnail,titleTotal,top,channel,key,api):
             mods = "No Mod"
         else:
             mods = "".join(play['mods'])
-        modsint = parsemods.parse(play['mods'])
+        modsint = parsemods(play['mods'])
         sr = db.getMapSr(play['beatmap']['id'],key,api,modsint)
         sr = sr['attributes']['star_rating']
         title = f"**{play['r']}) {mods}** [{sr:.2f}★]"
@@ -154,7 +161,7 @@ async def printBest(name,urlTotal,thumbnail,titleTotal,top,channel,key,api):
         dateFormat = "%Y-%m-%dT%H:%M:%SZ"
         d = datetime.strptime(play['created_at'],dateFormat)
         d = int(time.mktime(d.timetuple()))
-        date = f"<t:{d}:F>"
+        date = f"<t:{d}:D>"
         data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}\n{date}"
         titles.append(title)
         dataTotal.append(data)

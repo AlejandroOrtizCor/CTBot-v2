@@ -90,7 +90,7 @@ def getMsg(name,play,track,profile):
     dateFormat = "%Y-%m-%dT%H:%M:%SZ"
     d = datetime.strptime(play['created_at'],dateFormat)
     d = int(time.mktime(d.timetuple()))
-    date = f"<t:{d}:F>"
+    date = f"<t:{d}:D>"
     data = f"{rank} - {pp} - {acc}\n{score} - {combo} - {stats}\n{changes}\n{date}"
     message = discord.Embed(
         title = title,
